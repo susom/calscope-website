@@ -1,0 +1,31 @@
+# Use PHP 7.3 by replacing "php72" below with "php73"
+runtime: php73
+
+# Defaults to "serve index.php" and "serve public/index.php". Can be used to
+# serve a custom PHP front controller (e.g. "serve backend/index.php") or to
+# run a long-running PHP script as a worker process (e.g. "php worker.php").
+#
+# entrypoint: serve index.php
+
+handlers:
+    # This configures Google App Engine to serve the files in the app's static
+    # directory.
+  - url: /assets
+    static_dir: assets/
+      # This handler routes all requests not caught above to your main app. It is
+      # required when static routes are defined, but can be omitted (along with
+      # the entire handlers section) when there are no static files defined.
+
+  - url: /cn
+    script: auto
+
+  - url: /es
+    script: auto
+
+  - url: /tg
+    script: auto
+
+  - url: /.*
+    script: auto
+    secure: always
+    redirect_http_response_code: 301
