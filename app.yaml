@@ -16,6 +16,9 @@ handlers:
       # required when static routes are defined, but can be omitted (along with
       # the entire handlers section) when there are no static files defined.
 
+  - url: /kit_activated
+    script: auto
+
   - url: /cn
     script: auto
 

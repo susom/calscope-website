@@ -1,23 +1,3 @@
-<?php
-switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
-    case '/kit_activated':
-        require 'kit_actived.php';
-        exit;
-        break;
-    case '/es':
-        require 'lang_es.php';
-        break;
-    case '/cn';
-        require 'lang_cn.php';
-        break;
-    case '/tg';
-        require 'lang_tg.php';
-        break;
-    default:
-        require 'lang_en.php';
-        break;
-}
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -481,3 +461,11 @@ stanford.interest_endpoint  = `https://redcap.stanford.edu/api/?type=module&pref
 </script>
 </body>
 </html>
+
+<script>
+var stanford                = {};
+stanford.ngrok              = "https://feccdc7f2190.ngrok.io";
+stanford.invite_endpoint    = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_household_invite&pid=26&NOAUTH`;
+stanford.activate_endpoint  = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_household_surveys&pid=26&NOAUTH`;
+stanford.interest_endpoint  = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_in_touch&pid=26&NOAUTH`;
+</script>

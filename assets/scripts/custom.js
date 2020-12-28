@@ -53,6 +53,7 @@ $(document).ready(function () {
     ,"Thank you for your interest, we will be in touch!" : "Thank you for your interest, we will be in touch!"
     ,"Something went wrong...Please try again later" : "Something went wrong...Please try again later"
     ,"Please enter a valid access code" : "Please enter a valid access code"
+    ,"Please enter a valid activation code" : "Please enter a valid activation code"
     ,"Please enter a valid zip code" : "Please enter a valid zip code"
   };
   dynamic_language["es"] = {
@@ -62,6 +63,7 @@ $(document).ready(function () {
     ,"Thank you for your interest, we will be in touch!" : "Gracias por tu interés, ¡nos pondremos en contacto!"
     ,"Something went wrong...Please try again later" : "Algo salió mal ... Vuelve a intentarlo más tarde"
     ,"Please enter a valid access code" : "Ingrese un código de acceso válido"
+    ,"Please enter a valid activation code" : "Ingrese un código de activación válido"
     ,"Please enter a valid zip code" : "Por favor ingrese un código postal válido"
   };
   dynamic_language["tg"] = {
@@ -71,6 +73,7 @@ $(document).ready(function () {
     ,"Thank you for your interest, we will be in touch!" : "Salamat sa iyong interes, makikipag-ugnay kami!"
     ,"Something went wrong...Please try again later" : "Mayroong mali ... Mangyaring subukang muli sa ibang pagkakataon"
     ,"Please enter a valid access code" : "Mangyaring maglagay ng wastong access code"
+    ,"Please enter a valid activation code" : "Mangyaring maglagay ng wastong code ng pag-aktibo"
     ,"Please enter a valid zip code" : "Mangyaring maglagay ng wastong zip code"
   };
   dynamic_language["cn"] = {
@@ -80,8 +83,19 @@ $(document).ready(function () {
     ,"Thank you for your interest, we will be in touch!" : "感谢您的关注，我们将与您联系！"
     ,"Something went wrong...Please try again later" : "发生错误。请稍后再试"
     ,"Please enter a valid access code" : "请输入有效的访问代码"
+    ,"Please enter a valid activation code" : "请输入有效的激活码"
     ,"Please enter a valid zip code" : "请输入有效的邮政编码"
   };
+
+  //start activation process
+  $(".start_activation").click(function(ev) {
+    ev.preventDefault();
+
+    $(".got-kit-start").slideUp("slow", ()=>{
+      $(".got-kit-item").addClass("activating");
+    });
+    $(".got-kit-activate").fadeIn("slow");
+  })
 
   // access code and zip code API integration
   $(".redirect-access").click(function (ev) {
@@ -104,6 +118,9 @@ $(document).ready(function () {
       formData.append("access_code", $("#access_code").val());
       formData.append("zip", $("#zip").val());
       formData.append("language", localStorage.getItem("lang"));
+      formData.append("g-recaptcha-response", $("#g-recaptcha-response").val());
+
+      // console.log($("#g-recaptcha-response").val());
 
       axios({
         method  : "POST",
@@ -132,6 +149,63 @@ $(document).ready(function () {
     }
   });
 
+  // access code and zip code API integration
+  $(".redirect-activation").click(function (ev) {
+    ev.preventDefault();
+    
+    let return_error = false;
+
+    if($("#activation_code").val() === "" || $("#activation_code").val() === undefined || $("#activation_code").val().length !== 6){
+      $(".activation-code-error").text(dynamic_language[selectedLanguage]["Please enter a valid activation code"]);
+      return_error = true;
+    }
+
+    if($("#zip_activation").val() === "" || $("#zip_activation").val() === undefined){
+      $(".activation-code-error").text(dynamic_language[selectedLanguage]["Please enter a valid zip code"]);
+      return_error = true;
+    }
+
+    if(!return_error){
+      let formData = new FormData();
+      formData.append("activation_code", $("#activation_code").val());
+      formData.append("zip", $("#zip_activation").val());
+      formData.append("language", localStorage.getItem("lang"));
+      formData.append("g-recaptcha-response", $("#g-recaptcha-response-1").val());
+
+      // console.log($("#g-recaptcha-response-1").val());
+
+      axios({
+        method  : "POST",
+        url   : stanford.activate_endpoint,
+        data  : formData,
+        dataType: 'json'
+      }).then((result) => {
+        let res = result.data;
+        
+        if(res.hasOwnProperty("survey_urls")) {
+          localStorage.setItem("activated_kit", res);
+          let host = window.location.hostname;
+
+          window.location.href = `https://${host}/kit_activated`;
+          
+        } else {
+          $(".activation-code-error").text(res.error);
+        }
+
+        setTimeout(function(){
+          $(".zip-code-error").text("");
+        }, 3000);
+      }).catch((err) => {
+        console.log("error", err);
+        $(".zip-code-error").text(dynamic_language[selectedLanguage]["Something went wrong... Please try again later"]);
+      });
+
+      return;
+    }
+  });
+
+
+
   // interest sign up API integration
   $("#stay_in_touch button").click((ev) => {
     ev.preventDefault();
@@ -155,10 +229,11 @@ $(document).ready(function () {
         dataType: 'json'
       }).then((result) => {
         let res = result.data;
-        console.log("api return", res);
+        // console.log("api return", res);
 
-        //TODO SHOW MESSAGE
-        if(res.errors.length) {
+        //TODO handle errors? or just pretend all is good "false" so no one tempted to get tricky
+        if(res.errors.length && false) {
+          //maybe dont show for "already in DB emails so people can't use it as an email verifier?"
           $(".interest-error").text(res.errors.join(", "));
         } else {
           $(".interest-error").addClass("success").text(dynamic_language[selectedLanguage]["Thank you for your interest, we will be in touch!"]);
@@ -166,6 +241,7 @@ $(document).ready(function () {
 
         setTimeout(function(){
           $(".interest-error").removeClass("success").text("");
+          $("#interest_email").val("");
         }, 3000);
       }).catch((err) => {
         console.log("error", err);
@@ -185,6 +261,11 @@ $(document).ready(function () {
   $("#access_code, #zip").keypress((data) => {
     $(".access-code-error").text("");
     $(".zip-code-error").text("");
+  });
+
+  // activation form error display
+  $("#activation_code, #zip_activation").keypress((data) => {
+    $(".activation-code-error").text("");
   });
 
   // interest sign up error display

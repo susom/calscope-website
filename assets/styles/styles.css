@@ -758,8 +758,8 @@ h3 {
 }
 
 .access-sec-form {
-  width: 290px;
-  margin: 50px auto 0;
+  width: 304px;
+  margin: 30px auto 0;
 }
 .received-kit {
   background: #f7f7f7;
@@ -784,9 +784,30 @@ h3 {
   margin: 5px 0 0;
   text-align:center;
 }
+.interest-error{
+  margin-bottom:5px;
+}
 .interest-error.success{
   color:green;
 }
+
+.got-kit-item.activating{
+  background: url(../images/bg_activate.png) no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.got-kit-item.activating .got-kit-item-head h3{
+  color:#fff;
+}
+.redirect-activation, .redirect-activation:hover{
+  border-color:#fff;
+}
+
+.got-kit-activate {
+  display:none;
+}
+
+
 
 .got-kit-wrap.slick-slider .slick-track { 
 	display:-webkit-box; 
@@ -889,9 +910,9 @@ h3 {
   .invitation-kit:before {
     display: none;
   }
-  /* .got-kit-item-head {
-    display: none;
-	} */
+   .got-kit-item {
+    min-height:initial;
+	} 
   .mid-slider-first-image {
     margin-bottom: 0%;
   }
