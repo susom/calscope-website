@@ -183,11 +183,12 @@ $(document).ready(function () {
         let res = result.data;
         
         if(res.hasOwnProperty("survey_urls")) {
-          localStorage.setItem("activated_kit", res);
+          console.log(res);
+          localStorage.setItem("activated_kit", JSON.stringify(res));
           let host = window.location.hostname;
 
           window.location.href = `https://${host}/kit_activated`;
-          
+
         } else {
           $(".activation-code-error").text(res.error);
         }

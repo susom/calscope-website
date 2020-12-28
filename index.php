@@ -1,7 +1,7 @@
 <?php
 switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
     case '/kit_activated':
-        require 'kit_actived.php';
+        require 'kit_activated.php';
         exit;
         break;
     case '/es':
