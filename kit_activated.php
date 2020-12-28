@@ -1,5 +1,6 @@
-
-
+<?php
+$survey_first = "Please complete surveys first";
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,15 +18,12 @@
 <link rel="stylesheet" type="text/css"  href="./assets/styles/bootstrap.min.css" >
 <link rel="stylesheet" type="text/css" href="./assets/styles/styles.css">
 <style>
-  .header{
-    max-height: 864px;
-  }
-  .btn-t1 {
-    min-width:320px;
+  .video_ifu:after{
+    content:"<?=$survey_first?>";
   }
 </style>
 </head>
-<body>
+<body class="activation_landing_page">
 
   <div class="header">
     <video poster="./assets/images/bg_calscope.png" autoplay="" loop="" muted="" class="header__video">
@@ -45,75 +43,6 @@
               <img class="" src="./assets/images/logo_calscope.png" alt="logo">
             </a>
 
-            <div class="dropdown mobile-language">
-              <button type="button" class="btn btn-light dropdown-toggle btn-block" data-toggle="dropdown">
-                <i class="fa fa-globe"></i>
-              </button>
-              <div class="dropdown-menu language-switcher-cmn">
-                <div>
-                  <div class="custom-control custom-radio mt-3">
-                    <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" checked="">
-                    <label class="custom-control-label" for="customRadio2">English</label>
-                  </div>
-                </div>
-                <div>
-                  <div class="custom-control custom-radio mt-3">
-                    <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadio2">Español</label>
-                  </div>
-                </div>
-                <div>
-                  <div class="custom-control custom-radio mt-3">
-                    <input type="radio" id="customRadio3" name="customRadio" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadio3">Tagalog</label>
-                  </div>
-                </div>
-                <div>
-                  <div class="custom-control custom-radio mt-3">
-                    <input type="radio" id="customRadio4" name="customRadio" class="custom-control-input">
-                    <label class="custom-control-label" for="customRadio4">中文</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-              <div>
-                <img class="menu-open-logo" src="./assets/images/logo_calscope_color.png" alt="logo">
-              </div>
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown language-switcher">
-                  <a class="nav-link dropdown-toggle" href="https://www.calscope.org/#" data-toggle="dropdown"><i class="fa fa-globe"></i> English</a>
-                  <div class="dropdown-menu language-switcher-cmn">
-                    <div>
-                      <div class="custom-control custom-radio mt-3">
-                        <input type="radio" id="customRadio1" name="english" class="custom-control-input" checked="">
-                        <label class="custom-control-label" for="customRadio1">English</label>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="custom-control custom-radio mt-3">
-                        <input type="radio" id="spanish" name="customRadio" class="custom-control-input">
-                        <label class="custom-control-label" for="customRadio2">Español</label>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="custom-control custom-radio mt-3">
-                        <input type="radio" id="customRadio3" name="vietnamese" class="custom-control-input">
-                        <label class="custom-control-label" for="customRadio3">Tagalog</label>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="custom-control custom-radio mt-3">
-                        <input type="radio" id="customRadio4" name="chinese" class="custom-control-input">
-                        <label class="custom-control-label" for="customRadio4">中文</label>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </nav>
         </div>
       </div>
@@ -122,14 +51,21 @@
     <div class="header-info">
       <div class="container">
         <div class="header-info-body">
-          <h1>Thank you for activating your kit!</h1>
-          <p>Please complete your respective participant survey(s) to earn Gift Card rewards.</p>
+          <h1>Your kit is ready to use!</h1>
+          <p>Please complete the participant survey(s) then watch the video to proceed.</p>
         </div>
-        <div class="header-btn-items survey_urls">
-          <ul>
-            <li><a class="btn btn-t1 adult_survey" href="#">Adult Participant Survey</a></li>
-            <li><a class="btn btn-t1 child_survey" href="#">Child Participant Survey</a></li>
-          </ul>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 header-btn-items survey_urls">
+            <img class="how-it-work-item-step" src="./assets/images/step_1.png">
+            <ul>
+              <li><a class="btn btn-t1 adult_survey" href="#">Adult Participant Survey</a></li>
+              <li><a class="btn btn-t1 child_survey" href="#">Child Participant Survey</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-12 col-md-6 video_ifu">
+            <img class="how-it-work-item-step" src="./assets/images/step_2.png">
+            <iframe  src="https://www.youtube.com/embed/FuhHfxjxATc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
         </div>
       </div>
     </div>
@@ -168,15 +104,30 @@
 var stanford                = {};
 stanford.activate_endpoint  = `https://redcap.stanford.edu/api/?type=module&prefix=proj_calscope&page=endpoints%2Fget_household_surveys&pid=21642&NOAUTH`;
 
-let res = localStorage.getItem("activated_kit");
-let wtf = JSON.parse(res);
-console.log("yeah boy", wtf);
+let raw           = localStorage.getItem("activated_kit");
+let res           = JSON.parse(raw);
+let participants  = res["participants"];
+let adult = participants["adult"];
+let child = participants["child"];
 
-let survey_urls     = wtf["survey_urls"];
-let survey_complete = wtf["complete"];
+$(".adult_survey").attr("href", adult["survey_url"]);
+if(adult["complete"]){
+  $(".adult_survey").removeAttr("href").attr("disabled",true);
+}
 
-console.log(survey_urls);
-console.log(survey_complete);
+if(child["survey_url"]){
+  $(".child_survey").attr("href", child["survey_url"]).fadeIn("fast");
+  if(child["complete"]){
+    $(".child_survey").removeAttr("href").attr("disabled",true);
+  }
+}else{
+  $(".child_survey").parent().remove();
+}
+
+//show video IFU if either is complete
+if(adult["complete"] || (child && child["complete"])){
+  $(".video_ifu").addClass("allow_video");
+}
 </script>
 </body>
 </html>

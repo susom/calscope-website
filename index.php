@@ -481,3 +481,11 @@ stanford.interest_endpoint  = `https://redcap.stanford.edu/api/?type=module&pref
 </script>
 </body>
 </html>
+
+<script>
+var stanford                = {};
+stanford.ngrok              = "https://e63d5501db72.ngrok.io";
+stanford.invite_endpoint    = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_household_invite&pid=26&NOAUTH`;
+stanford.activate_endpoint  = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_household_surveys&pid=26&NOAUTH`;
+stanford.interest_endpoint  = `${stanford.ngrok}/api/?type=module&prefix=calscope&page=endpoints%2Fget_in_touch&pid=26&NOAUTH`;
+</script>

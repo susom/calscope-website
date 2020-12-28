@@ -181,8 +181,8 @@ $(document).ready(function () {
         dataType: 'json'
       }).then((result) => {
         let res = result.data;
-        
-        if(res.hasOwnProperty("survey_urls")) {
+        console.log("now what the fuck", res);
+        if(res.hasOwnProperty("participants")) {
           console.log(res);
           localStorage.setItem("activated_kit", JSON.stringify(res));
           let host = window.location.hostname;
